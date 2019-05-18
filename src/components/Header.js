@@ -60,7 +60,7 @@ Header.propTypes = {
 };
 
 const ConnectedHeader = connect(state => ({
-    wsConnected: state.ws.connected
+    wsConnected: state.graph.ws.status === 'open'
 }))(Header);
 
 const StyledHeader = withStyles(styles)(ConnectedHeader);

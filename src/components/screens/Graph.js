@@ -2,7 +2,6 @@ import React from "react";
 import CytoscapeComponent from 'react-cytoscapejs';
 import Fab from '@material-ui/core/Fab';
 import connect from "react-redux/es/connect/connect";
-import Typography from "@material-ui/core/es/Typography/Typography";
 import {withStyles} from "@material-ui/core";
 import Shuffle from 'mdi-material-ui/Shuffle';
 
@@ -50,17 +49,9 @@ class Graph extends React.Component {
     };
 
     render() {
-        const {classes, cytoData} = this.props;
+        const {classes, blocks} = this.props;
 
-        if (!cytoData) {
-            return (
-                <div className={classes.fallback}>
-                    <Typography variant="body1">
-                        No graph data available.
-                    </Typography>
-                </div>
-            );
-        }
+        const cytoData = [];
 
         return (<div style={{height: '100%', width: '100%'}}>
                 <CytoscapeComponent elements={cytoData} stylesheet={[{
@@ -82,9 +73,7 @@ class Graph extends React.Component {
 
 // eh..., connected with redux, not related to the "graph"
 const ConnectedGraph = connect(state => ({
-    src: state.data.src,
-    status: state.data.status,
-    cytoData: state.data.cytoData
+    blocks: state.graph.graphs.blocks
 }))(Graph);
 
 export default withStyles(styles)(ConnectedGraph);
