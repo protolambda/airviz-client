@@ -1,9 +1,13 @@
 import React from "react";
+import Cytoscape from 'cytoscape';
+import klay from 'cytoscape-klay';
 import CytoscapeComponent from 'react-cytoscapejs';
 import Fab from '@material-ui/core/Fab';
 import connect from "react-redux/es/connect/connect";
 import {withStyles} from "@material-ui/core";
 import Shuffle from 'mdi-material-ui/Shuffle';
+
+Cytoscape.use(klay);
 
 const styles = theme => ({
     fallback: {
@@ -43,7 +47,7 @@ class Graph extends React.Component {
 
     layout = () => {
         if (this.cy) {
-            const layout = this.cy.layout({ name: 'cose' });
+            const layout = this.cy.layout({ name: 'klay' });
             layout.run();
         }
     };
@@ -52,6 +56,9 @@ class Graph extends React.Component {
         const end = viewport.time + viewport.length;
         for (let i = viewport.time; i < end; i++) {
             const atIndex = graphTopicData[i];
+            if (atIndex === undefined) {
+                continue
+            }
             const ks = Object.keys(atIndex);
             for (let k of ks) {
                 const v = atIndex[k];
@@ -90,7 +97,7 @@ class Graph extends React.Component {
                         'curve-style': 'bezier',
                         'target-arrow-shape': 'triangle'
                     }
-                },]} layout={{name: "cose"}} className={classes.graph} pan={{x: 0, y: 0}} cy={this.makeCyRef}/>
+                },]} layout={{name: "klay"}} className={classes.graph} pan={{x: 0, y: 0}} cy={this.makeCyRef}/>
                 <div className={classes.graphButtons}>
                     <Fab color="primary" aria-label="Layout" className={classes.fab} onClick={this.layout}>
                         <Shuffle />

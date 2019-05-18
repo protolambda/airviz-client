@@ -7,7 +7,40 @@ const initialState = {
         length: 100
     },
     graphs: {
-        blocks: {} // key: time slot, value: list of items (can be empty)
+        // key: time slot, value: list of items (can be empty)
+        blocks: {
+            0: {
+                0: {
+                    value: 'abc',
+                    parentKey: '0000000000000000000000000000000000000000000000000000000000000000',
+                    selfKey: 'a'
+                },
+                1: {
+                    value: 'foo',
+                    parentKey: '0000000000000000000000000000000000000000000000000000000000000000',
+                    selfKey: 'b'
+                }
+            },
+            1: {
+                0: {
+                    value: '12345',
+                    parentKey: 'a',
+                    selfKey: 'c'
+                },
+            },
+            2: {
+                0: {
+                    value: 'dvsgfheth',
+                    parentKey: 'c',
+                    selfKey: 'd'
+                },
+                1: {
+                    value: 'bwsafdgfsrg',
+                    parentKey: 'b',
+                    selfKey: 'e'
+                },
+            }
+        }
     },
     ws: {
         status: 'closed',

@@ -28,7 +28,7 @@ function* updateStatus(topic) {
     const countsView   = new Uint32Array(buf, 5);
     for (let i = 0; i < viewport.length; i++) {
         const atIndex = g[i + viewport.time];
-        countsView[i] = Object.keys(atIndex).length;
+        countsView[i] = atIndex === undefined ? 0 : Object.keys(atIndex).length;
     }
     const debugView = new Uint8Array(buf);
     console.log("sending status message for topic ", topic, " msg: ", debugView);
