@@ -1,0 +1,52 @@
+{
+  "name": "airviz-client",
+  "version": "1.0.0",
+  "description": "airviz client",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "webpack-dev-server --config ./webpack.config.js --mode development",
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "keywords": [
+    "ethereum",
+    "explorer"
+  ],
+  "author": "@protolambda <proto@protolambda.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-decorators": "^7.0.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+    "@babel/plugin-proposal-function-sent": "^7.0.0",
+    "@babel/plugin-proposal-json-strings": "^7.0.0",
+    "@babel/plugin-proposal-numeric-separator": "^7.0.0",
+    "@babel/plugin-proposal-throw-expressions": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-syntax-import-meta": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.0",
+    "react-hot-loader": "^4.3.6",
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.8"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "@material-ui/core": "^3.6.2",
+    "@material-ui/icons": "^3.0.1",
+    "classnames": "^2.2.6",
+    "mdi-material-ui": "^5.0.0",
+    "prop-types": "^15.6.2",
+    "react": "^16.4.1",
+    "react-cytoscapejs": "^1.1.0",
+    "react-dom": "^16.4.1",
+    "react-redux": "^7.0.2",
+    "react-router-dom": "^5.0.0",
+    "reconnecting-websocket": "^4.1.10",
+    "redux": "^4.0.1",
+    "redux-saga": "^1.0.2",
+    "redux-websocket-bridge": "^0.3.0-0"
+  }
+}
