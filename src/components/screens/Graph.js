@@ -48,13 +48,43 @@ class Graph extends React.Component {
         }
     };
 
-    render() {
-        const {classes, blocks} = this.props;
+    addToElements = (elements, viewport, graphTopicData, labelPrefix) => {
+        const end = viewport.time + viewport.length;
+        for (let i = viewport.time; i < end; i++) {
+            const atIndex = graphTopicData[i];
+            const ks = Object.keys(atIndex);
+            for (let k of ks) {
+                const v = atIndex[k];
+                elements.push({
+                    data: {
+                        id: v.selfKey,
+                        label: labelPrefix + '~' + i + '~' + k,
+                        position: {
+                            x: i * 10,
+                            y: k * 5
+                        }
+                    }
+                });
+                if (v.parentKey !== '0000000000000000000000000000000000000000000000000000000000000000') {
+                    elements.push({
+                        data: {
+                            source: v.selfKey,
+                            target: v.parentKey,
+                        }
+                    });
+                }
+            }
+        }
+    };
 
-        const cytoData = [];
+    render() {
+        const {classes, viewport, blocks} = this.props;
+
+        const elements = [];
+        this.addToElements(elements, viewport, blocks, 'block');
 
         return (<div style={{height: '100%', width: '100%'}}>
-                <CytoscapeComponent elements={cytoData} stylesheet={[{
+                <CytoscapeComponent elements={elements} stylesheet={[{
                     selector: 'edge',
                     style: {
                         'curve-style': 'bezier',
@@ -73,7 +103,8 @@ class Graph extends React.Component {
 
 // eh..., connected with redux, not related to the "graph"
 const ConnectedGraph = connect(state => ({
-    blocks: state.graph.graphs.blocks
+    blocks: state.graph.graphs.blocks,
+    viewport: state.graph.viewport
 }))(Graph);
 
 export default withStyles(styles)(ConnectedGraph);

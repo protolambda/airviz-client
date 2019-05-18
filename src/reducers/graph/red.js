@@ -27,19 +27,31 @@ const mapping = {
             timestamp
         },
     }),
-    [at.ADD_DATA]: (state, {topic, time, height, data}) => ({
-        ...state,
-        graphs: {
-            ...state.graphs,
-            [topic]: {
-                ...state.graphs[topic],
-                [time]: {
-                    ...state.graphs[topic][time],
-                    [height]: data
+    [at.ADD_DATA]: (state, {topic, time, height, data, parentKey, selfKey}) => {
+        const atIndex = state.graphs[topic][time];
+        const ks = Object.keys(atIndex);
+        if (ks.length !== height) {
+            console.log("received out-of-order data, ignoring it.");
+            return state;
+        }
+        return ({
+            ...state,
+            graphs: {
+                ...state.graphs,
+                [topic]: {
+                    ...state.graphs[topic],
+                    [time]: {
+                        ...state.graphs[topic][time],
+                        [height]: {
+                            value: data,
+                            parentKey,
+                            selfKey
+                        }
+                    }
                 }
             }
-        }
-    })
+        })
+    }
 };
 
 const graphRed = redHelper(mapping, initialState);

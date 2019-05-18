@@ -14,6 +14,10 @@ function sendBuf(buf) {
     };
 }
 
+function arr2hex(arr) {
+    return Array.prototype.map.call(arr, x => ('00' + x.toString(16)).slice(-2)).join('');
+}
+
 function* updateStatus(topic) {
     const {viewport, g} = yield select((state) => ({viewport: state.graph.viewport, data: state.graph.graphs[topic.name]}));
     const buf = new ArrayBuffer(1 + 4 + (viewport.length * 4));
@@ -46,9 +50,11 @@ function* processRawMsg({buf}) {
     const b4View = new Uint32Array(buf, 1, 2);
     const time = b4View[0];
     const height = b4View[1];
+    const parentKey = arr2hex(new Uint8Array(buf, 9, 32));
+    const selfKey = arr2hex(new Uint8Array(buf, 41, 32));
     // TODO deserialize value bytes
 
-    yield put({type: at.ADD_DATA, topic: topicName, height: height, time: time, data: 'todo'});
+    yield put({type: at.ADD_DATA, topic: topicName, height: height, time: time, data: 'todo', parentKey: parentKey, selfKey: selfKey});
 }
 
 function* websocketHandling(action) {
