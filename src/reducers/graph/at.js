@@ -4,7 +4,7 @@ const graphAT = {
     // when the graph connection changes
     GRAPH_WS_UPDATE: 'GRAPH_WS_UPDATE',
     // when there is a raw message to process
-    BLOB_MSG: 'BLOB_MSG',
+    RAW_MSG: 'RAW_MSG',
     // to add new graph data to the store
     ADD_DATA: 'ADD_DATA',
     // triggers: local viewport adjustment, sends viewport change to server

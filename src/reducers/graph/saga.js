@@ -15,19 +15,18 @@ function makeWsCh(rws) {
     return eventChannel(emitter => {
         console.log("setting up websocket channel!");
         rws.addEventListener('close', (msg) => {
-            console.log('Websocket closed!');
+            // console.log('Websocket closed!');
             const time = ~~(Date.now() / 1000);
             emitter({type: at.GRAPH_WS_UPDATE, status: 'closed', timestamp: time});
         });
         rws.addEventListener('open', (msg) => {
-            console.log('Websocket opened!');
+            // console.log('Websocket opened!');
             const time = ~~(Date.now() / 1000);
             emitter({type: at.GRAPH_WS_UPDATE, status: 'open', timestamp: time});
         });
         rws.addEventListener('message', (msg) => {
-            // Process the raw message here, either string, ArrayBuffer, or Blob
-            console.log('Blob msg received!', msg);
-            emitter({type: at.BLOB_MSG, msg: msg});
+            // console.log('msg received!', msg);
+            emitter({type: at.RAW_MSG, buf: msg.data});
         });
         return () => {
             rws.close();
@@ -64,22 +63,11 @@ function* changeViewport() {
     yield call(updateStatus, topics.BLOCKS);
 }
 
-function* processBlobMsg({msg}) {
-    const buf = yield call(blobToBuffer, msg);
-    const debugView = new Uint8Array(buf);
-    console.log('Converted blob to buf!', debugView);
-    yield call(processRawMsg, buf);
-}
-
-function* processRawMsg(buf) {
-    // TODO parse message, add data to graph using ADD_DATA
-    console.log('raw msg: ', buf);
-    const debugView = new Uint8Array(buf);
+function* processRawMsg({buf}) {
     if (buf.byteLength < 96) {
         console.log("msg too short!");
         return;
     }
-    console.log('received msg: ', debugView);
     const headerView = new Uint32Array(buf, 0, 3);
     const topic = headerView[0];
     const topicName = topicToName(topic);
@@ -87,6 +75,9 @@ function* processRawMsg(buf) {
     const height = headerView[2];
     const parentKey = arr2hex(new Uint8Array(buf, 32, 32));
     const selfKey = arr2hex(new Uint8Array(buf, 64, 32));
+    if (parentKey === '0000000000000000000000000000000000000000000000000000000000000000') {
+        console.log("null parent: ", selfKey);
+    }
     // TODO deserialize value bytes
 
     yield put({type: at.ADD_DATA, topic: topicName, height: height, time: time, data: 'todo', parentKey: parentKey, selfKey: selfKey});
@@ -96,12 +87,13 @@ function* graphSaga() {
     console.log("graph saga");
     yield takeLatest(at.CHANGE_VIEWPORT, changeViewport);
     const rws = new ReconnectingWebSocket('ws://localhost:4000/ws', [], {debug: true});
+    rws.binaryType = 'arraybuffer';
     const wsCh = makeWsCh(rws);
-    yield takeEvery(at.BLOB_MSG, processBlobMsg);
+    yield takeEvery(at.RAW_MSG, processRawMsg);
     yield takeEvery(at.WS_SEND, handleWsSend, rws);
 
     while (true) {
-        const payload = yield take(wsCh)
+        const payload = yield take(wsCh);
         yield put(payload)
     }
 }

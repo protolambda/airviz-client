@@ -61,12 +61,15 @@ const mapping = {
         },
     }),
     [at.ADD_DATA]: (state, {topic, time, height, data, parentKey, selfKey}) => {
-        const atIndex = state.graphs[topic][time];
-        const ks = Object.keys(atIndex);
-        if (ks.length !== height) {
-            console.log("received out-of-order data, ignoring it.");
-            return state;
+        let atIndex = state.graphs[topic][time];
+        if (!atIndex) {
+            atIndex = state.graphs[topic][time] = {};
         }
+        const ks = Object.keys(atIndex);
+        // if (ks.length !== height) {
+        //     console.log("received out-of-order data, ignoring it.");
+        //     return state;
+        // }
         return ({
             ...state,
             graphs: {

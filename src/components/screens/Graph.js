@@ -54,6 +54,7 @@ class Graph extends React.Component {
 
     addToElements = (elements, viewport, graphTopicData, labelPrefix) => {
         const end = viewport.time + viewport.length;
+        const nodes = {};
         for (let i = viewport.time; i < end; i++) {
             const atIndex = graphTopicData[i];
             if (atIndex === undefined) {
@@ -62,26 +63,43 @@ class Graph extends React.Component {
             const ks = Object.keys(atIndex);
             for (let k of ks) {
                 const v = atIndex[k];
-                elements.push({
-                    data: {
-                        id: v.selfKey,
-                        label: labelPrefix + '~' + i + '~' + k,
-                        position: {
-                            x: i * 10,
-                            y: k * 5
-                        }
+                nodes[v.selfKey] = {
+                    parentKey: v.parentKey,
+                    label: labelPrefix + '~' + i + '~' + k,
+                    position: {
+                        x: i * 10,
+                        y: k * 5
                     }
-                });
-                if (v.parentKey !== '0000000000000000000000000000000000000000000000000000000000000000') {
+                };
+            }
+        }
+        const nodeKeys = Object.keys(nodes);
+        for (let k of nodeKeys) {
+            const v = nodes[k];
+            elements.push({
+                data: {
+                    id: k,
+                    label: v.label,
+                    position: v.position
+                }
+            });
+        }
+        console.log("nodes: ", elements.length);
+        for (let k of nodeKeys) {
+            const v = nodes[k];
+            if (v.parentKey !== '0000000000000000000000000000000000000000000000000000000000000000') {
+                // if the parent exists, then create an edge to it.
+                if (nodes.hasOwnProperty(v.parentKey)) {
                     elements.push({
                         data: {
-                            source: v.selfKey,
+                            source: k,
                             target: v.parentKey,
                         }
                     });
                 }
             }
         }
+        console.log("elements: ", elements.length);
     };
 
     render() {
@@ -97,7 +115,7 @@ class Graph extends React.Component {
                         'curve-style': 'bezier',
                         'target-arrow-shape': 'triangle'
                     }
-                },]} layout={{name: "klay"}} className={classes.graph} pan={{x: 0, y: 0}} cy={this.makeCyRef}/>
+                },]} layout={{name: "preset"}} className={classes.graph} pan={{x: 0, y: 0}} cy={this.makeCyRef}/>
                 <div className={classes.graphButtons}>
                     <Fab color="primary" aria-label="Layout" className={classes.fab} onClick={this.layout}>
                         <Shuffle />
