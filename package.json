@@ -48,7 +48,6 @@
     "react-router-dom": "^5.0.0",
     "reconnecting-websocket": "^4.1.10",
     "redux": "^4.0.1",
-    "redux-saga": "^1.0.2",
-    "redux-websocket-bridge": "^0.3.0-0"
+    "redux-saga": "^1.0.2"
   }
 }

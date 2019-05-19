@@ -4,13 +4,15 @@ const graphAT = {
     // when the graph connection changes
     GRAPH_WS_UPDATE: 'GRAPH_WS_UPDATE',
     // when there is a raw message to process
-    RAW_MSG: 'RAW_MSG',
+    BLOB_MSG: 'BLOB_MSG',
     // to add new graph data to the store
     ADD_DATA: 'ADD_DATA',
     // triggers: local viewport adjustment, sends viewport change to server
     CHANGE_VIEWPORT: 'CHANGE_VIEWPORT',
     // triggers: send the status (viewport + known amount of data) to the server
-    UPDATE_STATUS: 'UPDATE_STATUS'
+    UPDATE_STATUS: 'UPDATE_STATUS',
+    // when there is a msg to send
+    WS_SEND: 'WS_SEND',
     // TODO: filter data, visibility toggles
     // TODO: force cleanup data
 };
